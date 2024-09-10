@@ -1,38 +1,46 @@
-# Prerequisites
-*.d
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Bb]in/
+[Oo]bj/
+
+# Visual Studio cache/options directory
+.vs/
 
 # Compiled Object files
-*.slo
-*.lo
-*.o
+*.sbr
 *.obj
-
-# Precompiled Headers
-*.gch
+*.tlog
 *.pch
+*.pdb
+*.idb
+*.ilk
 
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
+# Backup & temporary files
+*.bak
+*~.nib
+*.tmp
+*.tmp_proj
+*.[Cc]ache
+*.log
+*.scc
+*.swp
+*~
 
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
-
-# Executables
-*.exe
-*.out
-*.app
-x64/Debug/version.txt
-GameFinder/links.txt
-.vs
-/.vs
-.vs/GameFinder/v17/ipch/AutoPCH/72c7fb4b831925af/GAMEFINDER.ipch
-.vs/GameFinder/v17/ipch/AutoPCH/72c7fb4b831925af/GAMEFINDER.ipch
+# OS generated files #
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+*.txt
