@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+x64/Debug/version.txt
+GameFinder/links.txt
+.vs
+/.vs
+.vs/GameFinder/v17/ipch/AutoPCH/72c7fb4b831925af/GAMEFINDER.ipch
+.vs/GameFinder/v17/ipch/AutoPCH/72c7fb4b831925af/GAMEFINDER.ipch
