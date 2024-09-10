@@ -2,10 +2,10 @@
 #include <fstream>
 #include <filesystem>
 #define CURL_STATICLIB
-//#include <curl/curl.h>
 #include <stdio.h>
 #include <cstdlib>
 #include <time.h>
+#include "curl/curl.h"
 using namespace std;
 namespace fs = filesystem;
 
@@ -20,24 +20,25 @@ void CheckVersion();
 void CheckVersion() {
     //check if version file exists
     cout << "Checking current list version";
-    /*if (!fs::exists("version.txt")) {
+    if (!fs::exists("version.txt")) {
         CURL* curl;
         CURLcode res;
         curl_global_init(CURL_GLOBAL_ALL);
 
         curl = curl_easy_init();
         if (curl) {
-            curl_easy_setopt(curl, CURLOPT_URL, "https://dutu.dev/");
+            curl_easy_setopt(curl, CURLOPT_URL, "https://drive.google.com/uc?export=download&id=1NvJlECyt_R54QDYzHj8ubBcNvjDngML4");
 
             res = curl_easy_perform(curl);
             if (res != CURLE_OK) {
                 cout << "Code Returned Error" , curl_easy_strerror(res);
             }
+
         }
 
         curl_global_cleanup();
 
-    }*/
+    }
 }
 
 void ChangeMenu(int inputMenu) {
