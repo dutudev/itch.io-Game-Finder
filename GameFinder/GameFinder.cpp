@@ -15,6 +15,10 @@ using namespace std::this_thread;
 
 int gameIndex = 0;
 int input = 0;
+string localVersionList = "";
+string onlineVersionList = "";
+string localVersionBuild = "";
+string onlineVersionBuild = "";
 path directoryFiles = "Files";
 path listVersionFile = "Files/listVersion.txt";
 path buildVersionFile = "Files/buildVersion.txt";
@@ -56,8 +60,24 @@ void CheckVersion() {
             cout << "Code Returned Error", curl_easy_strerror(res);
         }
         cout << "\nNewest version : " << fileContents;
+        onlineVersionList = fileContents;
     }
 
+    if (curl) {
+        curl_easy_setopt(curl, CURLOPT_URL, "https://drive.google.com/file/d/1NcxWeFlu2SLb5mCcD1Zp7MK1qe-ZmGDo/view?usp=sharing");
+
+        curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
+
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writecallback);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &fileContents);
+
+        res = curl_easy_perform(curl);
+        if (res != CURLE_OK) {
+            cout << "Code Returned Error", curl_easy_strerror(res);
+        }
+        onlineVersionBuild = fileContents;
+    }
+    curl_easy_cleanup(curl);
     curl_global_cleanup();
 
     if (!exists(directoryFiles)) {
@@ -79,17 +99,17 @@ void CheckVersion() {
     }
     else {
         cout << "\nComparing local version\n";
-        ofstream file(listVersionFile);
+        ifstream file(listVersionFile);
         if (file.is_open()) {
-            string onlineVersion, localVersion;
-            file << onlineVersion;
-            if (localVersion == onlineVersion) {
-                cout << "Local version up to date " << localVersion;
-                sleep_for(seconds(3));
-                ChangeMenu(0);
+            getline(file, localVersionList);
+            if (localVersionList == onlineVersionList) {
+                cout << "Local version up to date " << localVersionList;
             }
+            file.close();
         }
     }
+    sleep_for(seconds(3));
+    ChangeMenu(0);
 }
 
 void ChangeMenu(int inputMenu) {
@@ -98,7 +118,11 @@ void ChangeMenu(int inputMenu) {
     {
     case 0:
         cout << "Itch.io Game Finder\n";
-        cout << "\n1.Search for Game\n";
+        cout << "Write the number of the command you wish to run and press enter\n";
+        cout << "Currently on\n";
+        cout << "Build Version : " << localVersionBuild;
+        cout << "\nList Version : " << localVersionList;
+        cout << "\n\n1.Search for Game\n";
         cin >> input;
         PerformAction(input);
         break;

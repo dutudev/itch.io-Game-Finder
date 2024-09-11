@@ -3,6 +3,6 @@ C:\Users\vlad_\source\repos\GameFinder\GameFinder\GameFinder.cpp(4,9): warning C
       C:\Users\vlad_\source\repos\GameFinder\GameFinder\GameFinder.cpp(4,9):
       'CURL_STATICLIB' previously declared on the command line
   
-C:\Users\vlad_\source\repos\GameFinder\GameFinder\GameFinder.cpp(29,16): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\vlad_\source\repos\GameFinder\GameFinder\GameFinder.cpp(114,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\vlad_\source\repos\GameFinder\GameFinder\GameFinder.cpp(32,16): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\vlad_\source\repos\GameFinder\GameFinder\GameFinder.cpp(122,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
   GameFinder.vcxproj -> C:\Users\vlad_\source\repos\GameFinder\x64\Debug\GameFinder.exe
