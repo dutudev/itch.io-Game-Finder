@@ -7,6 +7,8 @@
 #include <time.h>
 #include <chrono>
 #include <thread>
+#include <list>
+#include <string>
 #include "curl/curl.h"
 #include "include/color.hpp"
 
@@ -17,11 +19,13 @@ using namespace std::this_thread;
 
 int gameIndex = 0;
 int input = 0;
+int gamesNumber = 0;
 bool latestBuild = true;
 string localVersionList = "";
 string onlineVersionList = "";
 string localVersionBuild = "";
 string onlineVersionBuild = "";
+list<string> gamesList;
 path directoryFiles = "Files";
 path listVersionFile = "Files/listVersion.txt";
 path buildVersionFile = "Files/buildVersion.txt";
@@ -30,6 +34,7 @@ path linksFile = "Files/links.txt";
 void PerformAction(int inputMenu);
 void ChangeMenu(int inputMenu);
 void UpdateList();
+void CreateVectorList();
 void CheckVersion();
 
 size_t writecallback(void* content, size_t size, size_t nmemb, string* data) {
@@ -114,7 +119,7 @@ void CheckVersion() {
             }
             else {
                 cout << dye::green("Updating game list");
-                //UpdateList();
+                UpdateList();
             }
             file.close();
         }
@@ -150,7 +155,7 @@ void CheckVersion() {
         }
     }
     sleep_for(seconds(3));
-    ChangeMenu(0);
+    CreateVectorList();
 }
 
 void ChangeMenu(int inputMenu) {
@@ -166,6 +171,7 @@ void ChangeMenu(int inputMenu) {
             cout << dye::green(" *new build available*");
         }
         cout << "\nList Version : " << localVersionList;
+        cout << "\nCurrently " << dye::aqua(gamesNumber) << " games in list!\n";
         cout << "\n\n1.Search for Game\n";
         cin >> input;
         PerformAction(input);
@@ -174,6 +180,67 @@ void ChangeMenu(int inputMenu) {
         break;
     default:
         break;
+    }
+    
+}
+
+void CreateVectorList() {
+    ifstream file(linksFile);
+    string line;
+    while (getline(file, line)) {
+        gamesList.push_back(line);
+        gamesNumber++;
+    }
+    ChangeMenu(0);
+}
+
+void UpdateList() {
+    CURL* curl;
+    CURLcode res;
+    curl_global_init(CURL_GLOBAL_ALL);
+
+    string fileContents;
+    fileContents = "";
+    curl = curl_easy_init();
+    if (curl) {
+        curl_easy_setopt(curl, CURLOPT_URL, "https://drive.google.com/file/d/1bpRi9RBe6D38lBkKWD0Jz_VW-hkizNT5/view?usp=sharing");
+
+        curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
+
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writecallback);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &fileContents);
+
+        res = curl_easy_perform(curl);
+        if (res != CURLE_OK) {
+            cout << "Code Returned Error", curl_easy_strerror(res);
+        }
+        
+    }
+    curl_easy_cleanup(curl);
+    curl_global_cleanup();
+    if (!exists(linksFile)) {
+        ofstream file(linksFile);
+        if (file.is_open()) {
+            file << fileContents;
+            file.close();
+        }
+        else {
+            cout << "Failed to create file";
+        }
+    }
+    else {
+        ifstream file(linksFile);
+        if (file.is_open()) {
+            getline(file, localVersionBuild);
+            if (localVersionBuild == onlineVersionBuild) {
+                cout << "Local build version up to date " << localVersionBuild;
+            }
+            else {
+                cout << dye::green("New build available on dutudev github!");
+                latestBuild = false;
+            }
+            file.close();
+        }
     }
     
 }
@@ -193,6 +260,7 @@ void PerformAction(int inputMenu) {
 }
 int main()
 {
+    system("title itch.io Gamefinder");
     CheckVersion();
     return 0;
 }
