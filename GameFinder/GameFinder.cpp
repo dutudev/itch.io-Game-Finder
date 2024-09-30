@@ -7,7 +7,7 @@
 #include <time.h>
 #include <chrono>
 #include <thread>
-#include <list>
+#include <vector>
 #include <string>
 #include "curl/curl.h"
 #include "include/color.hpp"
@@ -20,18 +20,18 @@ using namespace std::this_thread;
 int gameIndex = 0;
 int input = 0;
 int gamesNumber = 0;
+int GetRandomGame();
 bool latestBuild = true;
 string localVersionList = "";
 string onlineVersionList = "";
 string localVersionBuild = "";
 string onlineVersionBuild = "";
-list<string> gamesList;
+vector<string> gamesList;
 path directoryFiles = "Files";
 path listVersionFile = "Files/listVersion.txt";
 path buildVersionFile = "Files/buildVersion.txt";
 path linksFile = "Files/links.txt";
 
-void PerformAction(int inputMenu);
 void ChangeMenu(int inputMenu);
 void UpdateList();
 void CreateVectorList();
@@ -160,6 +160,7 @@ void CheckVersion() {
 
 void ChangeMenu(int inputMenu) {
     system("cls");
+
     switch (inputMenu)
     {
     case 0:
@@ -174,9 +175,10 @@ void ChangeMenu(int inputMenu) {
         cout << "\nCurrently " << dye::aqua(gamesNumber) << " games in list!\n";
         cout << "\n\n1.Search for Game\n";
         cin >> input;
-        PerformAction(input);
+        ChangeMenu(input);
         break;
     case 1:
+        cout << gamesList[GetRandomGame()];
         break;
     default:
         break;
@@ -192,6 +194,12 @@ void CreateVectorList() {
         gamesNumber++;
     }
     ChangeMenu(0);
+}
+
+int GetRandomGame() {
+    srand(time(NULL));
+
+    return rand() % gamesList.size();
 }
 
 void UpdateList() {
@@ -245,19 +253,6 @@ void UpdateList() {
     
 }
 
-void PerformAction(int inputMenu) {
-    srand(time(NULL));
-    
-    switch (inputMenu)
-    {
-    case 1:
-        gameIndex = rand();
-        ChangeMenu(0);
-        break;
-    default:
-        break;
-    }
-}
 int main()
 {
     system("title itch.io Gamefinder");
