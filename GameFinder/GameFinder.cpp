@@ -178,9 +178,15 @@ void ChangeMenu(int inputMenu) {
         ChangeMenu(input);
         break;
     case 1:
+        cout << "Picked Game :\n";
         cout << gamesList[GetRandomGame()];
+        cout << "\n\n0.Go to the main menu\n";
+        cout << "1.Find another game\n";
+        cin >> input;
+        ChangeMenu(input);
         break;
     default:
+        ChangeMenu(0);
         break;
     }
     
