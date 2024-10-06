@@ -9,6 +9,7 @@
 #include <thread>
 #include <vector>
 #include <string>
+#include <Windows.h>
 #include "curl/curl.h"
 #include "include/color.hpp"
 
@@ -26,6 +27,9 @@ string localVersionList = "";
 string onlineVersionList = "";
 string localVersionBuild = "";
 string onlineVersionBuild = "";
+string gameName = "";
+string gameDesc = "";
+string gameLink = "";
 vector<string> gamesList;
 path directoryFiles = "Files";
 path listVersionFile = "Files/listVersion.txt";
@@ -36,6 +40,7 @@ void ChangeMenu(int inputMenu);
 void UpdateList();
 void CreateVectorList();
 void CheckVersion();
+void GetGameInfo(string pickedGame);
 
 size_t writecallback(void* content, size_t size, size_t nmemb, string* data) {
     int length = size * nmemb;
@@ -178,13 +183,20 @@ void ChangeMenu(int inputMenu) {
         ChangeMenu(input);
         break;
     case 1:
+        GetGameInfo(gamesList[GetRandomGame()]);
+        gameLink = gamesList[GetRandomGame()];
         cout << "Picked Game :\n";
-        cout << gamesList[GetRandomGame()];
+        cout << gameName << endl;
+        cout << gameDesc;
         cout << "\n\n0.Go to the main menu\n";
         cout << "1.Find another game\n";
+        cout << "2.Open game\n";
         cin >> input;
         ChangeMenu(input);
         break;
+    case 2:
+        system(std::string("start " + gameLink).c_str());
+
     default:
         ChangeMenu(0);
         break;
@@ -257,6 +269,50 @@ void UpdateList() {
         }
     }
     
+}
+
+void GetGameInfo(string pickedGame) {
+    CURL* curl;
+    CURLcode res;
+    curl_global_init(CURL_GLOBAL_ALL);
+
+    string htmlContent;
+    htmlContent = "";
+    curl = curl_easy_init();
+    if (curl) {
+        curl_easy_setopt(curl, CURLOPT_URL, pickedGame.c_str());
+
+        curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
+
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writecallback);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &htmlContent);
+
+        res = curl_easy_perform(curl);
+        if (res != CURLE_OK) {
+            cout << "Code Returned Error" << curl_easy_strerror(res);
+        }
+    }
+    curl_easy_cleanup(curl);
+    curl_global_cleanup();
+    size_t startPos = htmlContent.find("<meta name=\"twitter:title\" content=");
+    if (startPos != string::npos) {
+        startPos += 36;
+
+        size_t endPos = htmlContent.find("\"", startPos);
+        if (endPos != std::string::npos) {
+            gameName = htmlContent.substr(startPos, endPos - startPos);
+        }
+    }
+
+    size_t startPosDesc = htmlContent.find("<meta name=\"twitter:description\" content=");
+    if (startPosDesc != string::npos) {
+        startPosDesc += 42;
+
+        size_t endPosDesc = htmlContent.find("Available for Windows\"", startPosDesc);
+        if (endPosDesc != std::string::npos) {
+            gameDesc = htmlContent.substr(startPosDesc, endPosDesc - startPosDesc);
+        }
+    }
 }
 
 int main()
