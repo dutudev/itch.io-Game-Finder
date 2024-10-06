@@ -109,6 +109,7 @@ void CheckVersion() {
             file.close();
             cout << "List up to date at " << listVersionFile;
             localVersionList = onlineVersionList;
+            UpdateList();
         }
         else {
             cout << "Failed to create file";
@@ -229,7 +230,7 @@ void UpdateList() {
     fileContents = "";
     curl = curl_easy_init();
     if (curl) {
-        curl_easy_setopt(curl, CURLOPT_URL, "https://drive.google.com/file/d/1bpRi9RBe6D38lBkKWD0Jz_VW-hkizNT5/view?usp=sharing");
+        curl_easy_setopt(curl, CURLOPT_URL, "https://drive.google.com/uc?export=download&id=1bpRi9RBe6D38lBkKWD0Jz_VW-hkizNT5");
 
         curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
 
@@ -255,7 +256,7 @@ void UpdateList() {
         }
     }
     else {
-        ifstream file(linksFile);
+        ifstream file(buildVersionFile);
         if (file.is_open()) {
             getline(file, localVersionBuild);
             if (localVersionBuild == onlineVersionBuild) {
@@ -272,6 +273,7 @@ void UpdateList() {
 }
 
 void GetGameInfo(string pickedGame) {
+    std::cout << "Attempting to fetch URL: " << pickedGame << std::endl;
     CURL* curl;
     CURLcode res;
     curl_global_init(CURL_GLOBAL_ALL);
