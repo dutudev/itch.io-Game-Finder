@@ -308,7 +308,7 @@ void GetGameInfo(string pickedGame) {
     if (startPosDesc != string::npos) {
         startPosDesc += 42;
 
-        size_t endPosDesc = htmlContent.find("Available for Windows\"", startPosDesc);
+        size_t endPosDesc = htmlContent.find("Available for Windows", startPosDesc);
         if (endPosDesc != std::string::npos) {
             gameDesc = htmlContent.substr(startPosDesc, endPosDesc - startPosDesc);
         }
