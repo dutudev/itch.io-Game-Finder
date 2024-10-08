@@ -208,8 +208,14 @@ void ChangeMenu(int inputMenu) {
 void CreateVectorList() {
     ifstream file(linksFile);
     string line;
-    while (getline(file, line)) {
-        gamesList.push_back(line);
+    getline(file, line);
+
+    stringstream ss(line);
+    string game;
+
+
+    while (getline(ss, game, ';')) {
+        gamesList.push_back(game);
         gamesNumber++;
     }
     ChangeMenu(0);
@@ -244,36 +250,34 @@ void UpdateList() {
         
     }
     curl_easy_cleanup(curl);
+
+
     curl_global_cleanup();
-    if (!exists(linksFile)) {
-        ofstream file(linksFile);
-        if (file.is_open()) {
-            file << fileContents;
-            file.close();
-        }
-        else {
-            cout << "Failed to create file";
-        }
+    ofstream file(linksFile);
+    if (file.is_open()) {
+        file << fileContents;
+        file.close();
     }
     else {
-        ifstream file(buildVersionFile);
-        if (file.is_open()) {
-            getline(file, localVersionBuild);
-            if (localVersionBuild == onlineVersionBuild) {
-                cout << "Local build version up to date " << localVersionBuild;
-            }
-            else {
-                cout << dye::green("New build available on dutudev github!");
-                latestBuild = false;
-            }
-            file.close();
-        }
+        cout << "Failed to create file";
     }
     
+    ofstream filelist(listVersionFile);
+    if (filelist.is_open()) {
+        filelist << onlineVersionList;
+        filelist.close();
+        cout << "\nUpdated list at " << listVersionFile << "\n";
+        localVersionList = onlineVersionList;
+        
+    }
+    else {
+        cout << "Failed to create file";
+    }
+    CheckVersion();
 }
 
 void GetGameInfo(string pickedGame) {
-    std::cout << "Attempting to fetch URL: " << pickedGame << std::endl;
+    //cout << "Attempting to fetch URL: " << pickedGame << endl;
     CURL* curl;
     CURLcode res;
     curl_global_init(CURL_GLOBAL_ALL);
