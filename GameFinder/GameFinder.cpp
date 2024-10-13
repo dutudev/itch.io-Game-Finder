@@ -30,6 +30,7 @@ string onlineVersionBuild = "";
 string gameName = "";
 string gameDesc = "";
 string gameLink = "";
+string link = "";
 vector<string> gamesList;
 path directoryFiles = "Files";
 path listVersionFile = "Files/listVersion.txt";
@@ -184,8 +185,9 @@ void ChangeMenu(int inputMenu) {
         ChangeMenu(input);
         break;
     case 1:
-        GetGameInfo(gamesList[GetRandomGame()]);
-        gameLink = gamesList[GetRandomGame()];
+        link = gamesList[GetRandomGame()];
+        GetGameInfo(link);
+        gameLink = link;
         cout << "Picked Game :\n";
         cout << gameName << endl;
         cout << gameDesc;
