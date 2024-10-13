@@ -300,19 +300,19 @@ void GetGameInfo(string pickedGame) {
     }
     curl_easy_cleanup(curl);
     curl_global_cleanup();
-    size_t startPos = htmlContent.find("<meta name=\"twitter:title\" content=");
+    size_t startPos = htmlContent.find("name=\"twitter:site\"/><meta content=");
     if (startPos != string::npos) {
         startPos += 36;
 
-        size_t endPos = htmlContent.find("\"", startPos);
+        size_t endPos = htmlContent.find("\" name=\"twitter:title\"", startPos);
         if (endPos != std::string::npos) {
             gameName = htmlContent.substr(startPos, endPos - startPos);
         }
     }
 
-    size_t startPosDesc = htmlContent.find("<meta name=\"twitter:description\" content=");
+    size_t startPosDesc = htmlContent.find("name=\"twitter:title\"/><meta content=");
     if (startPosDesc != string::npos) {
-        startPosDesc += 42;
+        startPosDesc += 37;
 
         size_t endPosDesc = htmlContent.find("Available for Windows", startPosDesc);
         if (endPosDesc != std::string::npos) {
