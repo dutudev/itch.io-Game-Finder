@@ -307,8 +307,14 @@ void GetGameInfo(string pickedGame) {
         startPos += 36;
 
         size_t endPos = htmlContent.find("\" name=\"twitter:title\"", startPos);
-        if (endPos != std::string::npos) {
+        if (endPos != string::npos) {
             gameName = htmlContent.substr(startPos, endPos - startPos);
+        }
+        
+        size_t specialCharacter = gameName.find("&#039;");
+        cout << specialCharacter << endl;
+        if (specialCharacter != string::npos) {
+            gameName = gameName.erase(specialCharacter, 6);
         }
     }
 
@@ -317,8 +323,15 @@ void GetGameInfo(string pickedGame) {
         startPosDesc += 37;
 
         size_t endPosDesc = htmlContent.find("Available for Windows", startPosDesc);
-        if (endPosDesc != std::string::npos) {
+        if (endPosDesc != string::npos) {
             gameDesc = htmlContent.substr(startPosDesc, endPosDesc - startPosDesc);
+        }
+        // add desc for browser games
+
+        size_t specialCharacter = gameDesc.find("&#039;");
+        cout << specialCharacter << endl;
+        if (specialCharacter != string::npos) {
+            gameDesc = gameDesc.erase(specialCharacter, 6);
         }
     }
 }
