@@ -311,10 +311,16 @@ void GetGameInfo(string pickedGame) {
             gameName = htmlContent.substr(startPos, endPos - startPos);
         }
         
+        //check for '
         size_t specialCharacter = gameName.find("&#039;");
-        cout << specialCharacter << endl;
         if (specialCharacter != string::npos) {
-            gameName = gameName.erase(specialCharacter, 6);
+            gameName = gameName.replace(specialCharacter, 6, "'");
+        }
+
+        //check for &
+        specialCharacter = gameName.find("&amp;");
+        if (specialCharacter != string::npos) {
+            gameName = gameName.replace(specialCharacter, 6, "&");
         }
     }
 
@@ -328,10 +334,15 @@ void GetGameInfo(string pickedGame) {
         }
         // add desc for browser games
 
+        //check for '
         size_t specialCharacter = gameDesc.find("&#039;");
-        cout << specialCharacter << endl;
         if (specialCharacter != string::npos) {
-            gameDesc = gameDesc.erase(specialCharacter, 6);
+            gameDesc = gameDesc.replace(specialCharacter, 6, "'");
+        }
+        //check for &
+        specialCharacter = gameDesc.find("&amp;");
+        if (specialCharacter != string::npos) {
+            gameDesc = gameDesc.replace(specialCharacter, 6, "&");
         }
     }
 }
